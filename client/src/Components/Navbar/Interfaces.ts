@@ -9,13 +9,11 @@ interface INavbarActions {
   space?: number;
   avatarPosition?: number;
   setDrawer: Dispatch<SetStateAction<boolean>>;
-  setCodeForm: Dispatch<SetStateAction<boolean>>;
-  setRole: Dispatch<SetStateAction<'student' | 'teacher'>>;
 }
 
 interface IMenuList {
   setDrawer: Dispatch<SetStateAction<boolean>>;
-  toggleMenu: (e: MouseEvent<HTMLElement> | undefined) => void;
+  toggleMenu: (e?: MouseEvent<HTMLElement>) => void;
   anchorEl: HTMLElement | null;
 }
 

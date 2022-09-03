@@ -1,72 +1,61 @@
-import React from 'react';
-import {
-  Card, CardActionArea, CardContent, CardMedia, Dialog, Grid, Typography,
-} from '../../mui';
-import { useAuth } from '../../Hooks';
-import teacher from '../../Assets/teacher.png';
-import student from '../../Assets/student.png';
+import { useMemo } from 'react';
+import { Card, CardActionArea, CardContent, CardMedia, Dialog, Grid, Typography } from '../../mui';
+import { useAuth, useModal } from '../../Hooks';
+import teacherImage from '../../Assets/teacher.png';
+import studentImage from '../../Assets/student.png';
+import { TRole } from '../../Contexts/Auth/types';
+import { properCase } from '../../Utils';
 
-interface IRole {
-  setRole: (role: 'teacher' | 'student') => void;
-}
+function RoleModal() {
+  const { setAuthModal, roleModal, setRoleModal } = useModal();
+  const { setRole } = useAuth();
 
-function RoleModal({ setRole }: IRole) {
-  const { authModalType, setAuthModalType } = useAuth();
+  const chooseRole = (role: TRole) => () => {
+    setRole(role);
+    setAuthModal('login');
+    setRoleModal('CLOSED');
+  };
+
+  const closeModal = () => {
+    setRoleModal('CLOSED');
+    setAuthModal(undefined);
+  };
+
+  const roles:TRole[] = ['teacher', 'student'];
+
+  const memoizedRoleModalCard = useMemo(
+    () => roles.map((role) => {
+      const image = role === 'teacher' ? teacherImage : studentImage;
+      return (
+        <Grid key={role} item sm={6} xs={12}>
+          <Card style={{ boxShadow: '0 7px #F9AA33', border: '1px solid', borderRadius: '10px' }}>
+            <CardActionArea onClick={chooseRole(role)}>
+              <CardMedia component="img" image={image} alt={role} />
+              <CardContent>
+                <Typography variant="h4" fontWeight={600}>
+                  {properCase(role)}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      );
+    }),
+    [roles, chooseRole],
+  );
 
   return (
+    <Dialog open={roleModal === 'OPEN'} onClose={closeModal}>
+      <Grid container spacing={5} textAlign="center" p="30px">
 
-    <Dialog
-      open={authModalType === 'role'}
-      onClose={() => { setAuthModalType(null); setRole('student'); }}
-    >
-      <Grid
-        container
-        spacing={5}
-        style={{
-          padding: '30px', textAlign: 'center',
-        }}
-      >
         <Grid item xs={12}>
-          <Typography alignSelf="center" variant="h4" style={{ fontWeight: 600 }}>Continue as</Typography>
+          <Typography alignSelf="center" variant="h4" fontWeight={600}>
+            Continue as
+          </Typography>
         </Grid>
-        <Grid item sm={6} xs={12}>
-          <Card
-            style={{ boxShadow: '0 7px #F9AA33', border: '1px solid', borderRadius: '10px' }}
-          >
-            <CardActionArea onClick={() => {
-              setRole('teacher');
-              setAuthModalType('login_signup');
-            }}
-            >
-              <CardMedia
-                component="img"
-                image={teacher}
-                alt="teacher"
-              />
-              <CardContent>
-                <Typography variant="h4" style={{ fontWeight: 600 }}>Teacher</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Card style={{ boxShadow: '0 7px #F9AA33', border: '1px solid', borderRadius: '10px' }}>
-            <CardActionArea onClick={() => {
-              setRole('student');
-              setAuthModalType('login_signup');
-            }}
-            >
-              <CardMedia
-                component="img"
-                image={student}
-                alt="student"
-              />
-              <CardContent>
-                <Typography variant="h4" style={{ fontWeight: 600 }}>Student</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
+
+        {memoizedRoleModalCard}
+
       </Grid>
     </Dialog>
   );

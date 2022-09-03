@@ -37,6 +37,12 @@
     "react/jsx-props-no-spreading": "off",
     "no-unused-vars": "off",
     "no-unused-expressions": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "react/function-component-definition": "off",
+    "comma-dangle": "off",
+    "object-curly-newline": "off",
+    "react/react-in-jsx-scope": "off",
+    "implicit-arrow-linebreak": "off",
+    "max-len": "off"
   }
 }
