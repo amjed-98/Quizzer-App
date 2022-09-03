@@ -21,7 +21,7 @@ app.use([
   express.urlencoded({ extended: false }),
   cookieParser(),
   compression(),
-  cors({ origin: 'http://localhost:3000', credentials: true }),
+  cors(),
 ]);
 
 app.use('/api/v1/', router);

@@ -1,6 +1,6 @@
 import { createContext, useMemo, useReducer, type ReactNode, type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TUser, IUserInfo, IAuthContext, TRole } from './types';
+import { TUser, IUserInfo, IAuthContext, TRole, Actions } from './types';
 import authReducer, { initialState } from './authReducer';
 import { useFetch, useModal, useMutate } from '../../Hooks';
 
@@ -29,7 +29,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } = await signupAsync(userInfo);
     const payload = { user: newUser, error: signupError?.message || '' };
 
-    dispatch({ type: 'AUTHENTICATE', payload });
+    dispatch({ type: Actions.AUTHENTICATE, payload });
     navigateTo(`/${role}`);
   };
 
@@ -39,26 +39,26 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     } = await loginAsync(userInfo);
     const payload = { user: loggedUser, error: loginError?.message || '' };
 
-    dispatch({ type: 'AUTHENTICATE', payload });
+    dispatch({ type: Actions.AUTHENTICATE, payload });
     navigateTo(`/${role}`);
   };
 
   const checkAuth = (authorizedUser:TUser): void => {
     const payload = { user: authorizedUser, error: checkAuthError?.message || '' };
 
-    dispatch({ type: 'AUTHENTICATE', payload });
+    dispatch({ type: Actions.AUTHENTICATE, payload });
   };
 
   const logout = async (): Promise<void> => {
     await logoutAsync(null);
     const payload = { user: null, error: logoutError?.message || '', };
 
-    dispatch({ type: 'LOGOUT', payload });
+    dispatch({ type: Actions.LOGOUT, payload });
     navigateTo('/');
   };
 
   const setRole = (pickedRole: TRole): void => {
-    dispatch({ type: 'SET_ROLE', payload: { role: pickedRole } });
+    dispatch({ type: Actions.SET_ROLE, payload: { role: pickedRole } });
   };
 
   const memoizedAuth = useMemo(
