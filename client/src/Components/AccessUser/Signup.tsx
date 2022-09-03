@@ -7,7 +7,6 @@ import { useAuth, useModal, useSnackBar } from '../../Hooks';
 import { Form, Input, Submit } from '../FormUI';
 import { IAccessUserProperties, IUserInfo } from './Interfaces';
 import { signupSchema } from '../../Validation';
-import { signInWithPopup, GoogleAuthProvider, auth } from '../../Firebase/config';
 import {
   Button,
   DialogTitle,
@@ -32,25 +31,6 @@ function Signup({ passwordsType, setPasswordsType, }: IAccessUserProperties) {
   const { signup } = useAuth();
   const [image, setImage] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const signupWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const { user }: any = result;
-      const email = user.email as string;
-      const password = user.accessToken as string;
-      const avatar = user.photoURL as string;
-      const username = user.displayName as string;
-
-      signup({
-        username, email, password, avatar, role, bio: '',
-      });
-    } catch (err: any) {
-      showSnackBar('Something went wrong while connecting with Google', 'error');
-    }
-  };
 
   const initialValues = {
     email: '', password: '', passwordConfirmation: '', role, username: '', bio: '', avatar: '',
@@ -100,7 +80,6 @@ function Signup({ passwordsType, setPasswordsType, }: IAccessUserProperties) {
               variant="contained"
               startIcon={<GoogleIcon />}
               style={{ width: '100%' }}
-              onClick={signupWithGoogle}
             >
               Continue with Google
             </Button>

@@ -4,7 +4,6 @@ import classes from './AccessUser.module.css';
 import { Form, Input, Submit } from '../FormUI';
 import { IUserInfo, IAccessUserProperties } from './Interfaces';
 import { loginSchema } from '../../Validation';
-import { signInWithPopup, GoogleAuthProvider, auth } from '../../Firebase/config';
 import {
   Button,
   DialogTitle,
@@ -26,21 +25,6 @@ function Login({
   const { showSnackBar } = useSnackBar();
   const { login, role } = useAuth();
   const { setAuthModal } = useModal();
-
-  const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const { user }: any = result;
-      const email = user.email as string;
-      const password = user.accessToken as string;
-
-      login({ email, password, role });
-    } catch (err: any) {
-      showSnackBar('Something went wrong while logging in with Google', 'error');
-    }
-  };
 
   const initialValues = { email: '', password: '', role };
   const loginSubmit = (userInfo: IUserInfo) => login(userInfo);
@@ -68,7 +52,6 @@ function Login({
               variant="contained"
               startIcon={<GoogleIcon />}
               style={{ width: '100%' }}
-              onClick={loginWithGoogle}
             >
               Continue with Google
             </Button>
