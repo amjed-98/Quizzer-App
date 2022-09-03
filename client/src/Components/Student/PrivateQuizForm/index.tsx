@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Submit } from '../../FormUI';
@@ -13,32 +12,27 @@ import {
   InputAdornment,
   Stack,
 } from '../../../mui';
-import { useSnackBar } from '../../../Hooks';
+import { useModal, useSnackBar } from '../../../Hooks';
 import classes from './PrivateQuizForm.module.css';
 
-interface PrivateQuizFormProps {
-  codeFormOpen: boolean;
-  setCodeFormOpen: (codeFormOpen: boolean) => void;
-}
-
-function PrivateQuizForm({ codeFormOpen, setCodeFormOpen }: PrivateQuizFormProps) {
+function PrivateQuizForm() {
+  const { enterCodeModal, setEnterCodeModal } = useModal();
   const { showSnackBar } = useSnackBar();
   const navigate = useNavigate();
-  const handleClose = () => setCodeFormOpen(false);
 
   const initialValues = { quizId: '' };
   const checkQuizIdValid = async ({ quizId }: { quizId: string }) => {
     try {
       await axios.get(`/api/v1/student/quiz/${quizId}`);
       navigate(`/student/quiz-details?type=private&id=${quizId}`);
-      setCodeFormOpen(false);
+      setEnterCodeModal('CLOSED');
     } catch (err: any) {
       showSnackBar('Invalid Quiz Code', 'error');
     }
   };
 
   return (
-    <Dialog open={codeFormOpen} onClose={handleClose}>
+    <Dialog open={enterCodeModal === 'OPEN'} onClose={() => setEnterCodeModal('CLOSED')}>
       <Form
         initialValues={initialValues}
         validationSchema={searchForPrivateQuizSchema}

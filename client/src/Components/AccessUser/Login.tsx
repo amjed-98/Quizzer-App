@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useAuth, useSnackBar } from '../../Hooks';
+import { useAuth, useModal, useSnackBar } from '../../Hooks';
 import classes from './AccessUser.module.css';
 import { Form, Input, Submit } from '../FormUI';
 import { IUserInfo, IAccessUserProperties } from './Interfaces';
@@ -20,17 +20,12 @@ import {
 } from '../../mui';
 
 function Login({
-  role: enteredRole,
-  setLoginModalOpen,
   passwordsType,
   setPasswordsType,
 }: IAccessUserProperties) {
   const { showSnackBar } = useSnackBar();
-  const { login, setErrors, errors } = useAuth();
-
-  useEffect(() => {
-    if (errors.length) showSnackBar(errors[0], 'error');
-  }, [errors]);
+  const { login, role } = useAuth();
+  const { setAuthModal } = useModal();
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -41,13 +36,13 @@ function Login({
       const email = user.email as string;
       const password = user.accessToken as string;
 
-      login({ email, password, role: enteredRole });
+      login({ email, password, role });
     } catch (err: any) {
       showSnackBar('Something went wrong while logging in with Google', 'error');
     }
   };
 
-  const initialValues = { email: '', password: '', role: enteredRole };
+  const initialValues = { email: '', password: '', role };
   const loginSubmit = (userInfo: IUserInfo) => login(userInfo);
 
   return (
@@ -135,7 +130,7 @@ function Login({
           <DialogContentText paddingBottom="50x">
             Don’t have an account?
           </DialogContentText>
-          <Typography color="secondary" style={{ cursor: 'pointer' }} onClick={() => { setLoginModalOpen(false); setErrors([]); }}>&nbsp;Sign up</Typography>
+          <Typography color="secondary" style={{ cursor: 'pointer' }} onClick={() => setAuthModal('signup')}>&nbsp;Sign up</Typography>
         </Grid>
       </DialogContent>
     </Form>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import spinner from '../../Assets/spinner.gif';
 import classes from './AccessUser.module.css';
-import { useAuth, useSnackBar } from '../../Hooks';
+import { useAuth, useModal, useSnackBar } from '../../Hooks';
 import { Form, Input, Submit } from '../FormUI';
 import { IAccessUserProperties, IUserInfo } from './Interfaces';
 import { signupSchema } from '../../Validation';
@@ -25,17 +25,13 @@ import {
   VisibilityOffIcon,
 } from '../../mui';
 
-function Signup({
-  role: enteredRole, setLoginModalOpen, passwordsType, setPasswordsType,
-}: IAccessUserProperties) {
+function Signup({ passwordsType, setPasswordsType, }: IAccessUserProperties) {
+  const { role } = useAuth();
+  const { setAuthModal } = useModal();
   const { showSnackBar } = useSnackBar();
-  const { signup, setErrors, errors } = useAuth();
-  const [image, setImage] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (errors.length) showSnackBar(errors[0], 'error');
-  }, [errors]);
+  const { signup } = useAuth();
+  const [image, setImage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const signupWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -49,7 +45,7 @@ function Signup({
       const username = user.displayName as string;
 
       signup({
-        username, email, password, avatar, role: enteredRole, bio: '',
+        username, email, password, avatar, role, bio: '',
       });
     } catch (err: any) {
       showSnackBar('Something went wrong while connecting with Google', 'error');
@@ -57,7 +53,7 @@ function Signup({
   };
 
   const initialValues = {
-    email: '', password: '', passwordConfirmation: '', role: enteredRole, username: '', bio: '', avatar: '',
+    email: '', password: '', passwordConfirmation: '', role, username: '', bio: '', avatar: '',
   };
 
   const uploadImage = async (e: any) => {
@@ -251,7 +247,7 @@ function Signup({
           <DialogContentText paddingBottom="50x">
             Already have an account?
           </DialogContentText>
-          <Typography color="secondary" style={{ cursor: 'pointer' }} onClick={() => { setLoginModalOpen(true); setErrors([]); }}>&nbsp;log in</Typography>
+          <Typography color="secondary" style={{ cursor: 'pointer' }} onClick={() => { setAuthModal('login'); }}>&nbsp;log in</Typography>
         </Grid>
       </DialogContent>
     </Form>

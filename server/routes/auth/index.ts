@@ -11,7 +11,7 @@ const router = Router();
 
 router.get('/confirmation/:hash', verifyAccount);
 router.get('/is-auth', getUser);
-router.get('/logout', logout);
+router.delete('/logout', logout);
 router.post('/login', login);
 router.post('/signup', signup);
 

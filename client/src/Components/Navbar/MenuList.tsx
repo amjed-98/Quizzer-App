@@ -18,8 +18,13 @@ function MenuList({ setDrawer, toggleMenu, anchorEl }: IMenuList) {
     setDrawer(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    hideDrawerAndMenu();
+  };
+
   return (
-    <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} transformOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={() => toggleMenu(undefined)}>
+    <Menu open={!!anchorEl} anchorEl={anchorEl} transformOrigin={{ vertical: 'top', horizontal: 'right' }} onClose={() => toggleMenu(undefined)}>
       <Stack divider={<Divider orientation="horizontal" flexItem />} width="10rem">
         <Typography variant="overline" color="GrayText" textAlign="center" component="span">
           Signed in as
@@ -27,7 +32,7 @@ function MenuList({ setDrawer, toggleMenu, anchorEl }: IMenuList) {
         </Typography>
 
         <MenuItem onClick={() => { hideDrawerAndMenu(); navigate(`/${role}/profile`); }}>Profile</MenuItem>
-        {pathname !== '/student/quiz/enroll' && pathname !== '/teacher/quiz/new' && <MenuItem onClick={() => { hideDrawerAndMenu(); logout(); }}>Logout</MenuItem>}
+        {pathname !== '/student/quiz/enroll' && pathname !== '/teacher/quiz/new' && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
       </Stack>
     </Menu>
   );

@@ -18,7 +18,7 @@ import {
 
 function EditStudentProfileModal({ editProfileModal, setEditProfileModal, setUserProfile }:any) {
   const { username, bio, avatar } = useAuth().user || {};
-  const { getUser } = useAuth();
+  const { checkAuth } = useAuth();
   const { showSnackBar } = useSnackBar();
   const [image, setImage] = useState<string>(avatar || '');
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,7 +47,7 @@ function EditStudentProfileModal({ editProfileModal, setEditProfileModal, setUse
     try {
       await axios.patch('/api/v1/student/profile', userInfo);
       setUserProfile(userInfo);
-      getUser();
+      checkAuth();
     } catch (err:any) {
       const { message } = err.response.data;
       showSnackBar(message, 'error');

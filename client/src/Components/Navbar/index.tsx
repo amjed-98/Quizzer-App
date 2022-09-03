@@ -10,12 +10,11 @@ import classes from './Navbar.module.css';
 import { INavbar } from './Interfaces';
 import { useAuth } from '../../Hooks';
 
-function Navbar({ setCodeFormOpen, setRole }:INavbar) {
+function Navbar() {
   const [drawerOpen, setDrawer] = useState<boolean>(false);
   const { role, isVerified } = useAuth().user || {};
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery(useTheme().breakpoints.down('md'));
-
   return (
 
     <>
@@ -30,7 +29,7 @@ function Navbar({ setCodeFormOpen, setRole }:INavbar) {
             {isSmallScreen && (
             <>
               <Drawer open={drawerOpen} onClose={() => setDrawer(false)} anchor="right">
-                <NavbarActions setRole={setRole} setCodeForm={setCodeFormOpen} direction="column" space={2} avatarPosition={0} setDrawer={setDrawer} />
+                <NavbarActions direction="column" space={2} avatarPosition={0} setDrawer={setDrawer} />
               </Drawer>
 
               <IconButton onClick={() => setDrawer(true)}>
@@ -42,8 +41,6 @@ function Navbar({ setCodeFormOpen, setRole }:INavbar) {
             {
             !isSmallScreen && (
             <NavbarActions
-              setRole={setRole}
-              setCodeForm={setCodeFormOpen}
               setDrawer={setDrawer}
             />
             )
