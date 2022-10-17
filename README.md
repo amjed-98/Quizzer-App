@@ -17,7 +17,7 @@
 <h1 align="center">Quizzer</h1>
 
   <p align="center">
-       A website which teachers can use for creating and publish quizzes, and students can use to attend quizzes online.
+      A platform to help teachers create online Exams for their students and receive the mark via email.
     <br />
     <br />
     <a href="https://quizzer-g11.herokuapp.com">View Demo</a>
